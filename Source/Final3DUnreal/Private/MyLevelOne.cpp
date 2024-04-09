@@ -24,4 +24,3 @@ void AMyLevelOne::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-

@@ -24,4 +24,3 @@ void AMyPlayerBall::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
