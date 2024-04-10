@@ -10,7 +10,18 @@ UCLASS()
 class FINAL3DUNREAL_API AMyPlayerBall : public AActor
 {
 	GENERATED_BODY()
-	
+
+private:
+	bool didSoundPlay;
+	bool isBallFalling;
+
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float RollingVolumeMultiplier;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UAudioComponent* RollingBallTest;
+
 public:	
 	// Sets default values for this actor's properties
 	AMyPlayerBall();
