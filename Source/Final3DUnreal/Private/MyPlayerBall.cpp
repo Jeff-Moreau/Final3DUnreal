@@ -11,7 +11,10 @@ AMyPlayerBall::AMyPlayerBall()
 	didSoundPlay = false;
 	isBallFalling = false;
 	RollingVolumeMultiplier = 0.0f;
-	//RollingBallTest = CreateDefaultSubobject<UAudioComponent>(TEXT("RollingBallSound"));
+	TheBall = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RollingBallSound"));
+	RollingBallTest = CreateDefaultSubobject<UAudioComponent>(TEXT("TestSound"));
+	RollingBallTest->SetupAttachment(TheBall);
+	RollingBallSound = CreateDefaultSubobject<USoundBase>(TEXT("RollingBallSound"));
 }
 
 // Called when the game starts or when spawned
@@ -24,7 +27,6 @@ void AMyPlayerBall::BeginPlay()
 void AMyPlayerBall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
 	if (GetVelocity().Z < -100)
 	{
 		isBallFalling = true;
@@ -39,5 +41,5 @@ void AMyPlayerBall::Tick(float DeltaTime)
 		RollingVolumeMultiplier = GetVelocity().Y * 0.05f;
 	}
 
-	
+	//UGameplayStatics::PlaySound2D(GetWorld(),RollingBallSound, RollingVolumeMultiplier);
 }

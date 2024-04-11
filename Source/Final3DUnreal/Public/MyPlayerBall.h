@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/AudioComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "MyPlayerBall.generated.h"
 
 UCLASS()
@@ -13,14 +15,22 @@ class FINAL3DUNREAL_API AMyPlayerBall : public AActor
 
 private:
 	bool didSoundPlay;
-	bool isBallFalling;
 
-public:
+protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float RollingVolumeMultiplier;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool isBallFalling;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UStaticMeshComponent* TheBall;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UAudioComponent* RollingBallTest;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	USoundBase* RollingBallSound;
 
 public:	
 	// Sets default values for this actor's properties
