@@ -8,11 +8,11 @@
 ATheBall::ATheBall()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	InitializeComponents();
+	InitializeMyComponents();
 	InitializeVariables();
 }
 
-void ATheBall::InitializeComponents()
+void ATheBall::InitializeMyComponents()
 {
 	BallMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ball"));
 	BallMesh->SetupAttachment(RootComponent);
@@ -97,12 +97,7 @@ void ATheBall::Tick(float DeltaTime)
 
 bool ATheBall::BallMoving() const
 {
-	if (GetVelocity() != FVector(0,0,0))
-	{
-		return true;
-	}
-	
-	return false;
+	return (GetVelocity() != FVector(0,0,0));
 }
 
 void ATheBall::PlayDroppedSound()

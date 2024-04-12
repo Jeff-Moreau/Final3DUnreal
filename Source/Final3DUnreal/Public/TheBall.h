@@ -42,7 +42,7 @@ public:
 
 private:
 	void InitializeVariables();
-	void InitializeComponents();
+	void InitializeMyComponents();
 	void PlaySound(UAudioComponent* sound);
 	
 protected:
