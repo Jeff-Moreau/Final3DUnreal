@@ -8,13 +8,22 @@ AMyPlayerBall::AMyPlayerBall()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	didSoundPlay = false;
-	isBallFalling = false;
+	SetupVariables();
+}
+
+void AMyPlayerBall::SetupVariables()
+{
+	DidSoundPlay = false;
+	DidBallFall = false;
+
 	RollingVolumeMultiplier = 0.0f;
-	TheBall = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RollingBallSound"));
-	RollingBallTest = CreateDefaultSubobject<UAudioComponent>(TEXT("TestSound"));
-	RollingBallTest->SetupAttachment(TheBall);
-	RollingBallSound = CreateDefaultSubobject<USoundBase>(TEXT("RollingBallSound"));
+
+	TheBall = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TheBall"));
+	TheBall->SetupAttachment(RootComponent);
+	RollingBall = CreateDefaultSubobject<UAudioComponent>(TEXT("BallRollingSound"));
+	RollingBall->SetupAttachment(TheBall);
+	DropBall = CreateDefaultSubobject<UAudioComponent>(TEXT("BallDropSound"));
+	DropBall->SetupAttachment(TheBall);
 }
 
 // Called when the game starts or when spawned
@@ -27,9 +36,10 @@ void AMyPlayerBall::BeginPlay()
 void AMyPlayerBall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 	if (GetVelocity().Z < -100)
 	{
-		isBallFalling = true;
+		DidBallFall = true;
 	}
 
 	if (GetVelocity().Y < 0)
@@ -40,6 +50,27 @@ void AMyPlayerBall::Tick(float DeltaTime)
 	{
 		RollingVolumeMultiplier = GetVelocity().Y * 0.05f;
 	}
+	
+	RollingBall->SetVolumeMultiplier(RollingVolumeMultiplier);
 
-	//UGameplayStatics::PlaySound2D(GetWorld(),RollingBallSound, RollingVolumeMultiplier);
+	RollingBall->Play();
+}
+
+void AMyPlayerBall::PlayHitSound()
+{
+	if (DidBallFall)
+	{
+		if (DidSoundPlay && !DropBall->IsPlaying())
+		{
+			DidSoundPlay = false;
+		}
+		else
+		{
+			DidSoundPlay = true;
+			if (!DropBall->IsPlaying())
+			{
+				DropBall->Play();
+			}
+		}
+	}
 }
