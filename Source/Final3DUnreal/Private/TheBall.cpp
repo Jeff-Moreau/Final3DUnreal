@@ -48,7 +48,7 @@ void ATheBall::PlaySound(UAudioComponent* sound)
 	}
 	else
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("No Sound To Play!"));
+		UE_LOG(LogTemp, Warning, TEXT("No Sound To Play!"));
 	}
 }
 
@@ -56,7 +56,7 @@ void ATheBall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//UE_LOG(LogTemp, Warning, TEXT("%f"), GetVelocity().Z);
+	UE_LOG(LogTemp, Warning, TEXT("%f"), GetVelocity().Z);
 	
 	if (BallMoving())
 	{
@@ -91,7 +91,7 @@ void ATheBall::Tick(float DeltaTime)
 	if (GetVelocity().Z <= -400)
 	{
 		DidBallFall = true;
-		//UE_LOG(LogTemp, Warning, TEXT("I fell"));
+		UE_LOG(LogTemp, Warning, TEXT("I fell"));
 	}
 }
 
