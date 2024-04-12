@@ -18,7 +18,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool DidBallFall;
-
+	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float BallSize;
 
@@ -33,6 +33,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UAudioComponent* RollingBallSFX;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UAudioComponent* DroppedBallSFX;
 	
 public:	
 	ATheBall();
@@ -40,10 +43,15 @@ public:
 private:
 	void InitializeVariables();
 	void InitializeComponents();
+	void PlaySound(UAudioComponent* sound);
 	
 protected:
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	virtual void Tick(float DeltaTime) override;
+	bool BallMoving() const;
+	
+	UFUNCTION(BlueprintCallable)
+	void PlayDroppedSound();
 };

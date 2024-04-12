@@ -3,6 +3,8 @@
 
 #include "TheBall.h"
 
+#include "AsyncTreeDifferences.h"
+
 ATheBall::ATheBall()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -16,71 +18,98 @@ void ATheBall::InitializeComponents()
 	BallMesh->SetupAttachment(RootComponent);
 	RollingBallSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("RollingSound"));
 	RollingBallSFX->SetupAttachment(BallMesh);
+	DroppedBallSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("DroppedSound"));
+	DroppedBallSFX->SetupAttachment(BallMesh);
 }
 
 void ATheBall::InitializeVariables()
 {
 	DidSoundPlay = false;
 	DidBallFall = false;
-
-	RollingVolumeMultiplier = 0.0f;
+	
+	RollingVolumeMultiplier = 0.05f;
 	BallSize = 0.3f;
 }
 
 void ATheBall::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	BallMesh->SetRelativeScale3D(FVector(BallSize, BallSize, BallSize));
 	BallMesh->SetMaterial(0,BallMaterial);
 	BallMesh->SetSimulatePhysics(true);
+}
+
+void ATheBall::PlaySound(UAudioComponent* sound)
+{
+	if (!sound->IsPlaying())
+	{
+		sound->Play();
+	}
+	else
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("No Sound To Play!"));
+	}
 }
 
 void ATheBall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	/*if (GetVelocity().Y > 0 || GetVelocity().X > 0)
+	//UE_LOG(LogTemp, Warning, TEXT("%f"), GetVelocity().Z);
+	
+	if (BallMoving())
 	{
-		RollingVolumeMultiplier = (GetVelocity().Y + GetVelocity().X) * 0.05f;
-		RollingBallSFX->SetVolumeMultiplier(RollingVolumeMultiplier);
-	}
-	else if (GetVelocity().Y < 0 || GetVelocity().X < 0)
-	{
-		RollingVolumeMultiplier = ((GetVelocity().Y + GetVelocity().X) * -1) * 0.05f;
-		RollingBallSFX->SetVolumeMultiplier(RollingVolumeMultiplier);
-	}*/
+		float YVolume;
+		float XVolume;
 
-	UE_LOG(LogTemp, Warning, TEXT("%f"), GetVelocity().Y);
-
-	if (GetVelocity() != FVector(0,0,0))
-	{
-		float yVolume;
-		float xVolume;
 		if (GetVelocity().Y < 0)
 		{
-			yVolume = GetVelocity().Y * -1;
+			YVolume = GetVelocity().Y * -1;
 		}
 		else
 		{
-			yVolume = GetVelocity().Y;
+			YVolume = GetVelocity().Y;
 		}
+		
 		if (GetVelocity().X < 0)
 		{
-			xVolume = GetVelocity().X * -1;
+			XVolume = GetVelocity().X * -1;
 		}
 		else
 		{
-			xVolume = GetVelocity().X;
+			XVolume = GetVelocity().X;
 		}
-			
-		RollingVolumeMultiplier = (xVolume + yVolume) * 0.005f;
-		RollingBallSFX->SetVolumeMultiplier(RollingVolumeMultiplier);
-		RollingBallSFX->SetPitchMultiplier(RollingVolumeMultiplier*-2);
-		if (!RollingBallSFX->IsPlaying())
-		{
-			RollingBallSFX->Play();
-			UE_LOG(LogTemp, Warning, TEXT("Playing Sound!"));
-		}
+		float const TotalVolume  = (XVolume + YVolume) * RollingVolumeMultiplier;
+
+		RollingBallSFX->SetVolumeMultiplier(TotalVolume);
+		RollingBallSFX->SetPitchMultiplier(TotalVolume * -2);
+		
+		PlaySound(RollingBallSFX);
+	}
+
+	if (GetVelocity().Z <= -400)
+	{
+		DidBallFall = true;
+		//UE_LOG(LogTemp, Warning, TEXT("I fell"));
 	}
 }
 
+bool ATheBall::BallMoving() const
+{
+	if (GetVelocity() != FVector(0,0,0))
+	{
+		return true;
+	}
+	
+	return false;
+}
+
+void ATheBall::PlayDroppedSound()
+{
+	if (DidBallFall)
+	{
+		PlaySound(DroppedBallSFX);
+		DidBallFall = false;
+	}
+}
