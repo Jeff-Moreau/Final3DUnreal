@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/AudioComponent.h"
 #include "TheBall.generated.h"
 
 UCLASS()
@@ -19,6 +20,9 @@ public:
 	bool DidBallFall;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float BallSize;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float RollingVolumeMultiplier;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -26,6 +30,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UMaterialInterface* BallMaterial;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UAudioComponent* RollingBallSFX;
 	
 public:	
 	ATheBall();
