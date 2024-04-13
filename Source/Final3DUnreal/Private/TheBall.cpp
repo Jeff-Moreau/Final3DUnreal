@@ -4,6 +4,7 @@
 #include "TheBall.h"
 
 #include "AsyncTreeDifferences.h"
+#include "Blueprint/UserWidget.h"
 
 ATheBall::ATheBall()
 {
